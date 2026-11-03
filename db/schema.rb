@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_11_01_150359) do
+ActiveRecord::Schema[8.1].define(version: 2026_11_03_143055) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -32,6 +32,19 @@ ActiveRecord::Schema[8.1].define(version: 2026_11_01_150359) do
     t.check_constraint "source_type::text = ANY (ARRAY['news'::character varying, 'blog'::character varying, 'social_media'::character varying]::text[])", name: "mentions_valid_source_type"
   end
 
+  create_table "user_sessions", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.string "token_digest", null: false
+    t.datetime "expires_at", null: false
+    t.datetime "revoked_at"
+    t.string "user_agent"
+    t.string "ip_address"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["token_digest"], name: "idx_user_sessions_token_digest", unique: true
+    t.index ["user_id"], name: "index_user_sessions_on_user_id"
+  end
+
   create_table "users", force: :cascade do |t|
     t.bigint "account_id", null: false
     t.string "name", null: false
@@ -44,5 +57,6 @@ ActiveRecord::Schema[8.1].define(version: 2026_11_01_150359) do
   end
 
   add_foreign_key "mentions", "accounts"
+  add_foreign_key "user_sessions", "users"
   add_foreign_key "users", "accounts"
 end
