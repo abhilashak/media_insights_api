@@ -5,4 +5,5 @@ class Mention < ApplicationRecord
 
   validates :title, :url, :source_type, presence: true
   validates :source_type, inclusion: { in: SOURCES }
+  validates :url, url: true
 end
