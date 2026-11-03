@@ -1,5 +1,5 @@
 class Mention < ApplicationRecord
-  SOURCES = %w[news blog social_media]
+  SOURCES = %w[news blog social_media].freeze
 
   belongs_to :account
 
