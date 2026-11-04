@@ -11,11 +11,15 @@ class UserSession < ApplicationRecord
     where("expires_at > ?", Time.current) 
   }
 
+  def self.digest_token(token)
+    Digest::SHA256.hexdigest(token)
+  end
+
   def self.generate_for(user)
     token = SecureRandom.hex(32)
 
     session = user.user_sessions.build(
-      token_digest: Digest::SHA256.hexdigest(token),
+      token_digest: digest_token(token),
       expires_at: 24.hours.from_now
     )
 
